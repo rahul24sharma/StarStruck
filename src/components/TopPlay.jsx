@@ -21,26 +21,25 @@ const TopChartCard = ({
 }) => (
   <div
     className={`w-full flex flex-row items-center hover:bg-[#4c426e] ${
-      activeSong?.title === song?.title ? "bg-[#4c426e]" : "bg-transparent"
+      activeSong?.title === song?.attributes?.name ? "bg-[#4c426e]" : "bg-transparent"
     } py-2 p-4 rounded-lg cursor-pointer mb-2`}
   >
     <h3 className="font-bold text-base text-white mr-3">{i + 1}.</h3>
     <div className="flex-1 flex flex-row justify-between items-center">
       <img
         className="w-20 h-20 rounded-lg"
-        src={song?.images?.coverart}
-        alt={song?.title}
+        src={song?.attributes?.artwork?.url}
+        alt={song?.attributes?.name}
       />
       <div className="flex-1 flex flex-col justify-center mx-3">
-        <Link to={`/songs/${song.key}`}>
-          <p className="text-xl font-bold text-white">{song?.title}</p>
+        <Link to={`/songs/${song.id}`}>
+          <p className="text-xl font-bold text-white">{song?.attributes?.name}</p>
         </Link>
-        {song && song.artists && song.artists[0] && (
-  <Link to={`/artists/${song.artists[0].adamid}`}>
-    <p className="text-base text-gray-300 mt-1">{song.subtitle}</p>
-  </Link>
-)}
-
+        {song?.relationships?.artists?.data && song?.relationships?.artists?.data[0] && (
+          <Link to={`/artists/${song?.relationships?.artists?.data[0].id}`}>
+            <p className="text-base text-gray-300 mt-1">{song?.attributes?.artistName}</p>
+          </Link>
+        )}
       </div>
     </div>
     <PlayPause
@@ -56,8 +55,10 @@ const TopChartCard = ({
 const TopPlay = () => {
   const dispatch = useDispatch();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
-  const { data } = useGetTopChartsQuery();
+  const countryCode = 'US';
+  const { data } = useGetTopChartsQuery(countryCode);
   const divRef = useRef(null);
+
 
   useEffect(() => {
     divRef.current.scrollIntoView({ behavior: "smooth" });
@@ -88,17 +89,22 @@ const TopPlay = () => {
         </div>
 
         <div className="mt-4 flex flex-col gap-1">
-          {topPlays?.map((song, i) => (
-            <TopChartCard
-              key={song.key}
-              song={song}
-              i={i}
-              isPlaying={isPlaying}
-              activeSong={activeSong}
-              handlePauseClick={handlePauseClick}
-              handlePlayClick={() => handlePlayClick(song, i)}
-            />
-          ))}
+          {topPlays?.map((song, i) => {
+            // Log the song object to inspect its properties
+            console.log();
+
+            return (
+              <TopChartCard
+                key={song.id}
+                song={song}
+                i={i}
+                isPlaying={isPlaying}
+                activeSong={activeSong}
+                handlePauseClick={handlePauseClick}
+                handlePlayClick={() => handlePlayClick(song, i)}
+              />
+            );
+          })}
         </div>
       </div>
 
@@ -119,21 +125,25 @@ const TopPlay = () => {
           modules={[FreeMode]}
           className="mt-4"
         >
-          {topPlays?.slice(0, 5)?.map((artist) => (
+          {topPlays?.map((artist, i) => (
             <SwiperSlide
-              key={artist?.key}
+              key={artist.id}
               style={{ width: "25%", height: "auto" }}
               className="shadow-lg rounded-full animate-slideright"
             >
-              {artist?.artists && artist?.artists[0] && artist?.images && (
-                <Link to={`/artists/${artist?.artists[0].adamid}`}>
-                  <img
-                    src={artist?.images?.background}
-                    alt="Name"
-                    className="rounded-full w-full object-cover"
-                  />
-                </Link>
-              )}
+              {artist?.relationships?.artists?.data &&
+                artist?.relationships?.artists?.data[0] &&
+                artist?.attributes?.artwork && (
+                  <Link
+                    to={`/artists/${artist?.relationships?.artists?.data[0].id}`}
+                  >
+                    <img
+                      src={artist?.attributes?.artwork?.url}
+                      alt={artist?.attributes?.artistName}
+                      className="rounded-full w-full object-cover"
+                    />
+                  </Link>
+                )}
             </SwiperSlide>
           ))}
         </Swiper>
