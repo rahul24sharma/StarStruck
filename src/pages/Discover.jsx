@@ -1,8 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Error, Loader, SongCard } from "../components";
-import { genres } from "../assets/constants";
-import { selectGenreListId } from "../redux/features/playerSlice";
-import { useGetSongsByGenreQuery } from "../redux/services/shazamcore";
+import { useDispatch, useSelector } from 'react-redux';
+import { Error, Loader, SongCard } from '../components';
+import { genres } from '../assets/constants';
+import { selectGenreListId } from '../redux/features/playerSlice';
+import { useGetSongsByGenreQuery } from '../redux/services/shazamcore';
 
 const Discover = () => {
   const dispatch = useDispatch();
@@ -14,8 +14,8 @@ const Discover = () => {
     isFetching,
     error,
   } = useGetSongsByGenreQuery({
-    genre: genreListId || "POP",
-    countryCode: countryCode || "US",
+    genre: genreListId || 'POP',
+    countryCode: countryCode || 'US',
   });
 
   console.log(data);
@@ -34,7 +34,7 @@ const Discover = () => {
         </h2>
         <select
           onChange={(e) => dispatch(selectGenreListId(e.target.value))}
-          value={genreListId || "pop"}
+          value={genreListId || 'pop'}
           className="bg-black text-gray-300 p-3 text-sm rounded-lg outline-none sm:mt-0 mt-5"
         >
           {genres.map((genre) => (

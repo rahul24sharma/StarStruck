@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { useGetSongsByCountryQuery } from '../redux/services/shazamcore';
 import { Error, Loader, SongCard } from '../components';
 
@@ -18,14 +18,12 @@ const AroundYou = () => {
         `https://geo.ipify.org/api/v2/country?apiKey=at_rjq8zvsD9v9umxIGXjMx2YtX003wi`
       )
       .then((res) => {
-        const fetchedCountry = res?.data?.location?.country || "US"; // Fallback to "US" if country is not found
+        const fetchedCountry = res?.data?.location?.country || 'US'; // Fallback to "US" if country is not found
         setCountry(fetchedCountry);
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, []);
-
-
 
   if (isFetching && loading) return <Loader title="Loading songs around you" />;
 

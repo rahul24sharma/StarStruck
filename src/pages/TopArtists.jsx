@@ -1,5 +1,5 @@
-import { useGetTopChartsQuery } from "../redux/services/shazamcore";
-import { ArtistCard, Loader, Error } from "../components";
+import { useGetTopChartsQuery } from '../redux/services/shazamcore';
+import { ArtistCard, Loader, Error } from '../components';
 
 const TopArtists = () => {
   const countryCode = 'US';
@@ -7,7 +7,7 @@ const TopArtists = () => {
 
   if (isFetching) return <Loader title="Loading top charts" />;
 
-  if (error) return <Error message={error?.data?.message || "An error occurred"} />;
+  if (error) return <Error message={error?.data?.message || 'An error occurred'} />;
 
   return (
     <div className="flex flex-col">
