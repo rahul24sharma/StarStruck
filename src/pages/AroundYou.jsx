@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useGetSongsByCountryQuery } from "../redux/services/shazamcore";
-import { Error, Loader, SongCard } from "../components";
+import { useGetSongsByCountryQuery } from '../redux/services/shazamcore';
+import { Error, Loader, SongCard } from '../components';
 
 const AroundYou = () => {
   const [country, setCountry] = useState(null); // Initialize as null
