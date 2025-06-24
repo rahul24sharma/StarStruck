@@ -1,32 +1,30 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { useGetSongsByCountryQuery } from '../redux/services/shazamcore';
+import { useGetAroundYouSongsQuery } from '../redux/services/shazamGeoApi';
 import { Error, Loader, SongCard } from '../components';
 
 const AroundYou = () => {
-  const [country, setCountry] = useState(null); // Initialize as null
+  const [country, setCountry] = useState(null);
   const [loading, setLoading] = useState(true);
   const { activeSong, isPlaying } = useSelector((state) => state.player);
 
-  // Fetch the songs by country code
-  const { data, isFetching, error } = useGetSongsByCountryQuery(country);
+  const { data, isFetching, error } = useGetAroundYouSongsQuery(country, {
+    skip: !country,
+  });
 
   useEffect(() => {
     axios
-      .get(
-        `https://geo.ipify.org/api/v2/country?apiKey=at_rjq8zvsD9v9umxIGXjMx2YtX003wi`
-      )
+      .get('https://geo.ipify.org/api/v2/country?apiKey=at_rjq8zvsD9v9umxIGXjMx2YtX003wi')
       .then((res) => {
-        const fetchedCountry = res?.data?.location?.country || 'US'; // Fallback to "US" if country is not found
+        const fetchedCountry = res?.data?.location?.country || 'US';
         setCountry(fetchedCountry);
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, []);
 
-  if (isFetching && loading) return <Loader title="Loading songs around you" />;
-
+  if ((isFetching || loading) && !data) return <Loader title="Loading songs around you" />;
   if (error) return <Error />;
 
   return (
@@ -35,13 +33,13 @@ const AroundYou = () => {
         Around You <span className="font-black">{country}</span>
       </h2>
       <div className="flex flex-wrap sm:justify-start justify-center gap-8">
-        {data?.map((song, i) => (
+        {data?.tracks?.map((song, i) => (
           <SongCard
             key={song.key}
             song={song}
             isPlaying={isPlaying}
             activeSong={activeSong}
-            data={data}
+            data={data.tracks}
             i={i}
           />
         ))}

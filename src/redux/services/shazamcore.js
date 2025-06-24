@@ -5,13 +5,11 @@ export const shazamCoreApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://shazam-core.p.rapidapi.com/",
     prepareHeaders: (headers) => {
-      headers.set(
-        'X-RapidAPI-Key',
-        '2b7d4de218mshe5edf9ae9a65cc1p1edd23jsn61304727db5c'
-      );
+      headers.set('X-RapidAPI-Key', '2b7d4de218mshe5edf9ae9a65cc1p1edd23jsn61304727db5c');
+      headers.set('X-RapidAPI-Host', 'shazam-core.p.rapidapi.com');
       return headers;
     },
-    credentials: 'omit', // Add this line if cookies are not needed
+    credentials: 'omit',
   }),
   endpoints: (builder) => ({
     getTopCharts: builder.query({
